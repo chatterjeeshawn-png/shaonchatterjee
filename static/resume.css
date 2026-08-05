@@ -1,0 +1,249 @@
+/* Resume-specific styles (moved out of main styles.css)
+   Keep only rules that apply to the resume page layout, project tiles,
+   impact-summary, side skills column, and per-card toggle styling. */
+
+/* Layout grid for resume page */
+.layout{
+  display:grid;
+  grid-template-columns: 4fr var(--side-width);
+  grid-template-rows: auto auto;
+  gap:28px;
+  align-items:start;
+}
+.main-column{ grid-column:1; grid-row:1 / span 2; }
+.side-column{ grid-column:2; grid-row:1; display:flex; flex-direction:column; align-items:flex-start; }
+
+/* Jobs and header */
+.job{ margin-bottom:18px; }
+.job-header{ display:flex; gap:12px; align-items:center; margin-bottom:8px; }
+.company-logo{ width:40px; height:40px; border-radius:6px; object-fit:cover; background:#fff; border:1px solid rgba(15,23,42,0.06); box-shadow:0 4px 10px rgba(12,18,32,0.04); flex:0 0 40px; }
+
+/* Resume header / badges adjustments */
+.resume-card .resume-header { padding: 18px 28px; margin: 0 0 18px 0; border-radius: calc(var(--radius) - 6px) calc(var(--radius) - 6px) 0 0; background: linear-gradient(180deg, rgba(37,99,235,0.12), rgba(239,246,255,0.95)); border-bottom: 1px solid rgba(37,99,235,0.14); position: relative; }
+
+/* Projects: grid and tiles */
+.projects{ box-sizing: border-box; padding: 12px; margin: 14px 0 28px; width: calc(100% + var(--side-width) + 28px); margin-right: calc(-1 * (var(--side-width) + 28px)); position: relative; z-index:40; background:transparent; }
+.projects-header{ display:flex; align-items:center; justify-content:space-between; gap:12px; width:100%; padding:8px 12px; box-sizing:border-box; }
+.projects-grid{ display:grid; grid-template-columns:repeat(2,1fr); gap:16px; margin-top:12px; align-items:stretch; grid-auto-rows: var(--projects-row-height, auto); }
+
+/* Project card visuals (compact, consistent) */
+.project-card {
+  position: relative;
+  background: linear-gradient(180deg, rgba(37,99,235,0.08), rgba(239,246,255,0.95));
+  border: 1px solid rgba(37,99,235,0.14);
+  box-shadow: 0 6px 16px rgba(12,18,32,0.04);
+  padding: 12px 14px;
+  border-radius: 10px;
+  min-height: 110px;
+  display:flex; flex-direction:column; justify-content:space-between;
+  transition: transform .14s ease, box-shadow .14s ease, background-color .18s ease, border-color .18s ease;
+  height:100% !important;
+  overflow: visible !important;
+}
+.project-card:hover{ transform: translateY(-4px); box-shadow: 0 10px 26px rgba(12,18,32,0.06); }
+
+/* GAO/STAR content handling */
+.project-gao-dl { margin-top: 6px; }
+.project-gao-dl dt { display:block; margin:0 0 4px 0; font-size:11px; font-weight:700; color:var(--muted); }
+.project-gao-dl dd { display:block; margin:0 0 6px 0; font-size:13px; color:var(--accent); line-height:1.35; }
+
+.project-star { display:none; margin-top:6px; }
+.project-card.view-star .project-gao { display:none !important; overflow:hidden !important; }
+.project-card.view-star .project-star { display:block !important; overflow:visible !important; max-height:none !important; }
+
+/* ensure measurement clones can override styles (JS sets inline !important) */
+.project-card .project-gao,
+.project-card .project-star { box-sizing: border-box; }
+
+/* Impact summary */
+.impact-summary{ box-sizing:border-box; background: linear-gradient(180deg, rgba(37,99,235,0.12), rgba(239,246,255,0.95)); color: var(--accent); padding:18px; border-radius:10px; margin:16px 0 22px; border:1px solid rgba(37,99,235,0.14); width: calc(100% + var(--side-width) + 28px); margin-right: calc(-1 * (var(--side-width) + 28px)); }
+
+/* Skill column & blocks */
+.skills-column{ position: relative; width:100%; min-height:300px; }
+.skill-block{ position:absolute; width:220px; top:0; left:0; margin:0; padding:0; text-align:center; }
+.skill-block .skills-heading{ display:inline-flex; align-items:center; justify-content:center; gap:8px; width:100%; margin:6px 0 8px; }
+.skill-block .skills{ display:block; margin:0 auto; padding:0; width:calc(100% - 0px); text-align:left; }
+.side-column .skills li{ display:block; width:100%; padding:8px 12px; margin-bottom:8px; font-size:0.95rem; font-weight:600; text-align:left; background: rgba(15,23,42,0.04); color: var(--accent); border-radius:8px; border:1px solid rgba(15,23,42,0.04); }
+
+/* Toggle control styling (subtle iOS-like) */
+.toggle-project { position:absolute; top:8px; right:12px; z-index:40; display:inline-flex; align-items:center; gap:8px; pointer-events:auto; user-select:none; cursor:pointer; }
+.toggle-project .label-gao, .toggle-project .label-star{ font-size:11px; color:var(--muted); font-weight:600; white-space:nowrap; pointer-events:none; }
+.toggle-project .switch{ position:relative; display:inline-block; width:48px; height:26px; border-radius:999px; cursor:pointer; pointer-events:auto; }
+.toggle-project .slider{ position:absolute; inset:0; background: rgba(15,23,42,0.06); border-radius:999px; transition: background-color .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease; pointer-events:none; box-shadow: inset 0 1px 0 rgba(255,255,255,0.04); }
+.toggle-project .slider::before{ content:""; position:absolute; width:20px; height:20px; left:3px; top:3px; background:#fff; border-radius:50%; box-shadow:0 6px 18px rgba(2,6,23,0.12); transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .14s ease; }
+
+/* STAR visuals driven by .view-star on the card */
+.project-card.view-star .toggle-project .slider{ background: linear-gradient(180deg, rgba(37,99,235,0.12), rgba(37,99,235,0.04)); box-shadow:0 6px 16px rgba(37,99,235,0.04); }
+.project-card.view-star .toggle-project .slider::before{ transform: translateX(22px); box-shadow:0 10px 24px rgba(37,99,235,0.12); }
+
+/* Small responsive tweaks */
+@media (max-width:900px){
+  .projects-grid{ grid-template-columns: 1fr; }
+  .toggle-project { top:6px; right:8px; gap:6px; }
+  .toggle-project .switch{ width:44px; height:24px; }
+  .toggle-project .slider::before{ width:18px; height:18px; left:3px; top:3px; }
+}
+
+/* ============================================================
+   PRINT / PDF STYLES
+   Clean resume layout — no interactive components.
+   ============================================================ */
+@media print {
+  /* ---------- page setup ---------- */
+  @page { size: letter; margin: 14mm 16mm; }
+  * { -webkit-print-color-adjust: exact; print-color-adjust: exact; box-shadow: none !important; text-shadow: none !important; }
+
+  /* ---------- hide everything not needed in a resume ---------- */
+  .site-header,
+  footer,
+  .site-footer,
+  nav,
+  .projects,               /* entire project tiles block per job */
+  .resources,              /* entire resources panel per job */
+  .impact-summary,         /* impact metrics (web-only feature) */
+  .keyword-tiles,          /* coloured keyword chips */
+  .toggle-project,         /* GAO/STAR switch */
+  .doc-modal,              /* document viewer modal */
+  .btn,                    /* download / print button */
+  button,
+  .side-column,            /* skills sidebar */
+  .skills-column,
+  .skill-block,
+  .profile-meta a[href^="tel"] { display: none !important; }
+
+  /* ---------- base ---------- */
+  html, body { background: #fff !important; color: #111 !important; font-size: 10pt; font-family: Georgia, "Times New Roman", serif; }
+  a { color: #111 !important; text-decoration: none !important; }
+
+  /* ---------- outer containers ---------- */
+  .container { max-width: 100% !important; padding: 0 !important; margin: 0 !important; }
+  .resume-card { border: none !important; border-radius: 0 !important; padding: 0 !important; box-shadow: none !important; background: #fff !important; }
+
+  /* ---------- header ---------- */
+  .resume-header {
+    background: none !important;
+    border-bottom: 1.5pt solid #333 !important;
+    padding: 0 0 10pt 0 !important;
+    margin-bottom: 10pt !important;
+  }
+  .profile { gap: 12pt !important; }
+  .profile-photo { width: 52pt !important; height: 52pt !important; border-radius: 50% !important; border: 1pt solid #ccc !important; }
+  .profile-info h1 { font-size: 18pt !important; margin: 0 0 3pt !important; }
+  .tagline { font-size: 9pt !important; color: #555 !important; margin: 2pt 0 0 !important; }
+  .profile-meta { gap: 6pt !important; }
+  .social-icon svg { width: 14pt !important; height: 14pt !important; }
+  .header-badges { gap: 6pt !important; }
+  .header-badge-img { width: 32pt !important; height: 32pt !important; }
+
+  /* ---------- profile summary ---------- */
+  .profile-summary { margin-bottom: 8pt !important; padding-bottom: 8pt !important; border-bottom: 0.5pt solid #ccc !important; }
+  .profile-summary h1 { font-size: 11pt !important; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 4pt !important; }
+  .profile-summary p { font-size: 9.5pt !important; line-height: 1.45 !important; margin: 0 !important; }
+
+  /* ---------- layout: single column ---------- */
+  .layout { display: block !important; }
+  .main-column { display: block !important; width: 100% !important; }
+
+  /* ---------- section headings ---------- */
+  .experience h2, .education h2 { font-size: 11pt !important; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1pt solid #333; padding-bottom: 2pt; margin: 0 0 8pt !important; }
+
+  /* ---------- job entries ---------- */
+  .job { margin-bottom: 12pt !important; page-break-inside: avoid; }
+  .job-header { gap: 8pt !important; margin-bottom: 3pt !important; align-items: center !important; }
+  .company-logo { width: 28pt !important; height: 28pt !important; border-radius: 4pt !important; border: 0.5pt solid #ccc !important; }
+  .job-title { font-size: 10.5pt !important; font-weight: bold !important; margin: 0 !important; }
+  .job-meta { font-size: 8.5pt !important; color: #555 !important; margin: 0 !important; }
+  .job ul { margin: 4pt 0 0 0 !important; padding-left: 14pt !important; }
+  .job ul li { font-size: 9pt !important; line-height: 1.4 !important; margin-bottom: 2.5pt !important; }
+
+  /* ---------- education ---------- */
+  .education { margin-top: 10pt !important; page-break-before: auto; }
+  .edu-entry { margin-bottom: 8pt !important; page-break-inside: avoid; }
+  .edu-entry ul { margin: 3pt 0 0 !important; padding-left: 14pt !important; }
+  .edu-entry ul li { font-size: 9pt !important; }
+
+  /* ---------- tableau section ---------- */
+  .tableau-section {
+    display: block !important;
+    page-break-before: always;
+    margin: 0 !important;
+    padding: 0 !important;
+    border: none !important;
+    background: none !important;
+  }
+  .tableau-section h2 { font-size: 11pt !important; text-transform: uppercase; letter-spacing: 0.06em; border-bottom: 1pt solid #333; padding-bottom: 2pt; margin: 0 0 8pt !important; }
+  .tableauPlaceholder { min-height: 280pt !important; width: 100% !important; }
+}
+
+.doc-modal {
+  position: fixed; inset: 0; background: rgba(2,6,23,0.45);
+  display: block; z-index: 999; opacity: 0; pointer-events: none; transition: opacity .18s ease;
+}
+.doc-modal[aria-hidden="false"] { opacity: 1; pointer-events: auto; }
+.doc-modal-container {
+  position: absolute; left: 50%; top: 50%; transform: translate(-50%,-50%);
+  width: min(900px, 92vw); background: #fff; border-radius: 12px; box-shadow: 0 20px 60px rgba(2,6,23,0.2);
+  padding: 12px; outline: none;
+}
+.doc-modal-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:8px; }
+.doc-modal-body { min-height: 60vh; }
+.viewer-fallback { padding: 16px; text-align: center; }
+.viewer-fallback .muted { color: var(--muted); margin-bottom: 8px; }
+
+/* Tableau section styles */
+.tableau-section {
+  margin: 48px 0 0 0;
+  padding: 32px 0 0 0;
+  border-top: 2px solid rgba(37,99,235,0.08);
+  background: linear-gradient(180deg,rgba(37,99,235,0.03),rgba(168,85,247,0.02));
+}
+.tableau-section.resume-card {
+  margin: 32px 0 0 0;
+  padding: 24px 28px 32px 28px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(37,99,235,0.04), rgba(168,85,247,0.02));
+  box-shadow: 0 6px 16px rgba(12,18,32,0.04);
+  border: 1px solid rgba(15,23,42,0.04);
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.tableau-section h2 {
+  font-size: 1.3rem;
+  color: #2563eb;
+  margin-bottom: 18px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+}
+
+.tableauPlaceholder {
+  width: 100%;
+  min-height: 400px;
+  margin: 0 auto;
+  border-radius: 10px;
+  box-shadow: 0 4px 18px rgba(37,99,235,0.06);
+  background: #fff;
+  overflow: hidden;
+  transition: box-shadow .2s;
+}
+.tableauPlaceholder:focus-within,
+.tableauPlaceholder:hover {
+  box-shadow: 0 8px 32px rgba(37,99,235,0.10);
+}
+
+.tableau-fullwidth {
+  grid-column: 1 / span 2;
+  width: 100%;
+  max-width: 100%;
+  margin-top: 40px;
+  margin-bottom: 0;
+  padding-left: 0;
+  padding-right: 0;
+}
+
+/* How to use
+- Keep resume.md free of script or modal markup.
+- Resource buttons already open via data-src/data-title:
+  - Example: <button class="resource-btn" data-src="https://example.com" data-title="External page">Open</button>
+- The modal is created by resume.js at runtime and shows a fallback link whenever the site blocks iframes, so you won’t see a blank viewer. */

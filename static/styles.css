@@ -1,0 +1,2268 @@
+:root{
+  --bg:#f4f8ff;
+  --card:#fcfdff;
+  --muted:#5b6b82;
+  --accent:#0f172a;
+  --accent-2:#2563eb;
+  --accent-3:#60a5fa;
+  --border:rgba(37,99,235,0.14);
+  --radius:12px;
+  --max-width:980px;
+  --side-width:260px; /* slightly narrower side panel to give more room for job descriptions */
+  --site-header-height:72px; /* height reserved for fixed header */
+}
+
+*{box-sizing:border-box}
+html,body{height:100%}
+body{
+  margin:0;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+  background:linear-gradient(180deg, #f4f8ff 0%, #f8fbff 100%);
+  color:var(--accent);
+  -webkit-font-smoothing:antialiased;
+  -moz-osx-font-smoothing:grayscale;
+  line-height:1.5;
+}
+
+.container{
+  max-width:var(--max-width);
+  margin:0 auto;
+  padding:24px;
+}
+
+header.site-header{
+  border-bottom:1px solid rgba(37,99,235,0.12);
+  background:linear-gradient(180deg, rgba(255,255,255,0.95), rgba(240,248,255,0.92));
+  padding:18px 0;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  z-index:1200;
+  width:100%;
+  /* subtle backdrop so content beneath doesn't peek through harshly */
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+/* Restore horizontal navigation ribbon for the site header */
+header.site-header{
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1200;
+
+  /* translucent + frosted glass */
+  background: rgba(250, 250, 255, 0.65);
+  border-bottom: 1px solid rgba(15,23,42,0.06);
+
+  /* blur the content beneath header where supported */
+  -webkit-backdrop-filter: blur(8px) saturate(110%) brightness(98%);
+          backdrop-filter: blur(8px) saturate(110%) brightness(98%);
+
+  /* subtle elevation */
+  box-shadow: 0 2px 8px rgba(10,20,40,0.04);
+}
+
+/* ensure header content stays visible and crisp */
+.site-header-inner { position: relative; z-index: 1210; }
+
+/* nav layout: make the list horizontal */
+.site-nav{ display: block; }
+
+.nav-list{
+  display: flex;
+  flex-direction: row;
+  gap: 28px;
+  align-items: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* nav item link visuals — restored simple blue underline via box-shadow */
+.nav-list li a{
+  display: inline-block;
+  padding: 8px 6px;
+  color: var(--muted-text, #6b7280);
+  text-decoration: none;
+  font-weight: 600;
+  border-radius: 4px;
+  transition: color 140ms ease, transform 140ms ease;
+}
+.nav-list li a:hover,
+.nav-list li a:focus{
+  color: var(--accent-2, #2563eb);
+  transform: translateY(-2px);
+  outline: none;
+}
+
+/* active/selected link underline (simple blue bar) */
+.nav-list li a.active,
+.nav-list li a[aria-current="page"]{
+  color: var(--accent-2, #2563eb);
+  box-shadow: inset 0 -4px 0 var(--accent-2, #2563eb);
+  padding-bottom: 6px; /* reserve space for the bar */
+  text-decoration: none;
+}
+
+/* ensure pseudo-elements from prior experiments don't interfere */
+.nav-list li a::before,
+.nav-list li a::after{
+  content: none;
+  display: none;
+  box-shadow: none;
+}
+
+/* Optional: keep hover/focus affordance but don't make it permanent */
+.nav-list li a:hover::after,
+.nav-list li a:focus::after{
+  transform: scaleX(1);
+  opacity: 1;
+}
+
+/* Extra safety: ensure no browser-supplied curvy underline appears */
+.nav-list li a,
+.nav-list li a::before {
+  text-decoration: none !important;
+  text-decoration-color: transparent !important;
+}
+.nav-list li a:hover,
+.nav-list li a:focus{
+  color: var(--accent, #2563eb);
+  transform: translateY(-2px);
+  outline: none;
+  text-decoration: none !important;         /* ensure hover/focus do not add underline */
+}
+
+/* Ensure no native/curvy underline or pseudo-element remains on nav links */
+.nav-list li a{
+  text-decoration: none !important;
+  text-decoration-color: transparent !important;
+  text-decoration-thickness: 0 !important;
+  text-underline-offset: 0 !important;
+  -webkit-text-decoration-skip-ink: none !important;
+  text-decoration-skip-ink: none !important;
+}
+
+/* Some themes add pseudo-elements for decorative underlines — remove them */
+.nav-list li a::before,
+.nav-list li a::after {
+  content: none !important;
+  display: none !important;
+  box-shadow: none !important;
+}
+
+/* Keep the simple blue underline (box-shadow) for active link */
+.nav-list li a.active,
+.nav-list li a[aria-current="page"]{
+  color: var(--accent, #2563eb);
+  box-shadow: inset 0 -4px 0 var(--accent, #2563eb);
+  padding-bottom: 6px; /* allow room for underline */
+  text-decoration: none !important;         /* ensure only the blue bar is visible */
+}
+
+/* make sure header keeps its height so page content doesn't jump */
+body{ padding-top: 72px; } /* adjust if header height differs */
+
+/* responsive: collapse spacing on small screens (keeps horizontal until very narrow) */
+@media (max-width:720px){
+  .site-header-inner{ padding:12px 16px; }
+  .nav-list{ gap:14px; }
+  body{ padding-top: 64px; }
+}
+
+/* enforce fixed header + reserve top space so content isn't hidden */
+header.site-header{
+  position: fixed !important;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: var(--site-header-height);
+  z-index: 1200;
+  width: 100%;
+}
+
+/* ensure header inner container fills that height */
+header.site-header .container{
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-left: 24px;
+  padding-right: 24px;
+}
+
+/* push page content down so it isn't covered by the fixed header */
+main, .page-hero + .container {
+  padding-top: calc(var(--site-header-height) + 8px);
+}
+
+/* ensure resume cards themselves are not pushed down (header should sit flush) */
+.container > article.resume-card {
+  padding-top: 0 !important;
+}
+
+/* fallback if some other rule is overriding header height */
+@media (max-width:780px){
+  header.site-header{ height: 64px !important; }
+  main, .page-hero + .container, .container > article.resume-card {
+    padding-top: calc(64px + 8px);
+  }
+}
+
+header.site-header nav a{
+  color:var(--muted);
+  text-decoration:none;
+  margin-left:16px;
+  font-weight:600;
+  font-size:0.95rem;
+}
+header.site-header nav a:hover{color:var(--accent-2)}
+
+/* active nav link styling */
+header.site-header nav a.active {
+  color: var(--accent-2);
+  font-weight: 700;
+  position: relative;
+}
+header.site-header nav a.active::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: -6px;
+  height: 3px;
+  background: var(--accent-2);
+  border-radius: 4px;
+  opacity: 0.95;
+}
+
+article.resume-card,
+article,
+.post,
+.page,
+.page-card {
+  background:linear-gradient(180deg, #ffffff 0%, #f8fbff 100%);
+  margin:28px 0;
+  padding:28px;
+  border-radius:var(--radius);
+  box-shadow:0 8px 24px rgba(37,99,235,0.08);
+  border:1px solid var(--border);
+}
+
+.resume-card h1, .resume-card h2, .resume-card h3,
+article h1, article h2, article h3,
+.post h1, .page h1 {
+  margin:0 0 8px 0;
+}
+.resume-card h1, article h1, .post h1, .page h1 {font-size:1.6rem}
+.resume-card .tagline, article .tagline, .post .tagline, .page .tagline {
+  color:var(--muted);
+  margin-bottom:14px;
+}
+
+.btn{
+  display:inline-block;
+  background:var(--accent-2);
+  color:white;
+  padding:8px 12px;
+  border-radius:8px;
+  text-decoration:none;
+  font-weight:600;
+  font-size:0.95rem;
+}
+
+/* layout: left column (main-column) spans both rows; side-column sits in the first row (aligns with Experience again) */
+.layout{
+  display:grid;
+  grid-template-columns: 4fr var(--side-width); /* make the main/job column wider relative to the side panel */
+  grid-template-rows: auto auto; /* row 1 -> Experience, row 2 -> Education */
+  gap:28px;
+  align-items:start;
+}
+
+/* main-column should span both rows so it contains Experience + Education */
+.main-column{
+  grid-column: 1;
+  grid-row: 1 / span 2;
+}
+
+/* side-column sits in the first row (aligns with Experience again) */
+.side-column{
+  grid-column: 2;
+  grid-row: 1;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start; /* keep badges inside the card and aligned with main content */
+}
+
+/* JOB: allow a right-side tools panel per job */
+ .job{
+  margin-bottom:18px;
+ }
+
+/* Force all normal job content into the first column */
+.job > *:not(.job-tools) {
+  grid-column: 1;
+}
+
+/* Place the tools widget explicitly in the second column, top-aligned */
+.job > .job-tools {
+  grid-column: 2;
+  grid-row: 1;
+  justify-self: end;
+  align-self: start;
+}
+
+/* If there are additional widgets (impact-summary etc.) ensure they stay in the left column */
+.job > .impact-summary,
+.job > .impact-summary + * {
+  grid-column: 1;
+}
+
+/* responsive: collapse layout to single column on small screens */
+@media (max-width:980px){
+  .layout{
+    grid-template-columns: 1fr;
+    grid-template-rows: auto;
+  }
+  .side-column{
+    grid-column: 1;
+    grid-row: auto;
+    align-items:flex-start;
+  }
+}
+
+@media (max-width:780px){
+  .layout{grid-template-columns:1fr; gap:18px}
+  .resume-header{flex-direction:column; align-items:flex-start}
+  .btn{width:100%; text-align:center}
+  .company-logo{width:32px;height:32px;border-radius:6px}
+}
+
+/* side column alignment (simple right alignment) */
+.side-column{
+  display:flex;
+  flex-direction:column;
+  align-items:flex-end;
+}
+
+/* center the Skills header within the side column */
+.side-column h2 {
+  align-self: center;
+  text-align: center;
+  width: 100%;
+  margin-bottom: 8px;
+}
+
+/* skills container: uniform badges */
+.skills{
+  list-style:none;
+  padding:0;
+  margin:20px 0 0 0;
+  display:flex;
+  flex-wrap:wrap;
+  gap:10px;
+  justify-content:flex-end;
+  align-items:center;
+}
+
+.skills li{
+  background: rgba(37,99,235,0.08);
+  color: var(--accent);
+  padding:10px 14px;
+  border-radius:8px;
+  font-size:0.95rem;
+  line-height:1;
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  flex:0 0 180px;
+  text-align:center;
+  border:1px solid rgba(37,99,235,0.12);
+}
+
+/* simplify skills column: remove headings/metadata and align blocks to job rows */
+.side-column{
+  grid-column: 2;
+  grid-row: 1;
+  display:flex;
+  flex-direction:column;
+  align-items:flex-start;
+}
+
+/* ensure the skills column stays visually aligned beside the main job list */
+.skills-column{
+  position: relative;
+  width:100%;
+  /* enough min height fallback; JS will update min-height to match main-column */
+  min-height: 300px;
+}
+
+/* make individual skill blocks absolutely positioned so they can be placed next to job headers */
+.skill-block{
+  position: absolute;
+  width: 220px;        /* uniform width for skill blocks (one chip per line) */
+  top: 0;
+  left: 0;             /* left will be set by JS to align flush with main column */
+  margin: 0;
+  padding: 0;
+  text-align: center;     /* center heading and inline content */
+}
+
+/* center the skills icon and heading above the tiles */
+.skill-block .skills-heading{
+  display: inline-flex;
+  align-items: center;
+  justify-content: center; /* center icon + label horizontally */
+  gap: 8px;
+  width: 100%;
+  margin: 6px 0 8px;
+}
+
+/* ensure the skills list sits centered beneath the heading and uses the block width */
+.skill-block .skills{
+  display: block;
+  margin: 0 auto;
+  padding: 0;
+  width: calc(100% - 0px);
+  text-align: left; /* keep each chip content left-aligned inside the chip */
+}
+
+/* keep individual skill tiles full-width inside the skill-block */
+.side-column .skills li{
+  display:block;
+  width:100%;
+  box-sizing:border-box;
+  padding:8px 12px;
+  margin-bottom:8px;
+  font-size:0.95rem;
+  font-weight:600;
+  text-align:left;
+  background: rgba(15,23,42,0.04);
+  color: var(--accent);
+  border-radius:8px;
+  border:1px solid rgba(15,23,42,0.04);
+}
+
+/* restore mini colorful keyword chips shown under each job (distinct from side-column .skills) */
+.keyword-tiles{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+  margin-top:12px;
+  align-items:center;
+}
+
+/* compact pill-style chip used under job entries */
+.keyword{
+  display:inline-block;
+  padding:6px 10px;
+  border-radius:999px; /* pill */
+  font-size:0.875rem;
+  font-weight:600;
+  line-height:1;
+  white-space:nowrap;
+  border:1px solid transparent;
+}
+
+/* color variants (soft background, stronger text) */
+.kw-blue{
+  background: rgba(37,99,235,0.10);
+  color: #1e40af; /* blue-800 */
+  border-color: rgba(37,99,235,0.14);
+}
+.kw-emerald{
+  background: rgba(16,185,129,0.08);
+  color: #065f46; /* emerald-800 */
+  border-color: rgba(16,185,129,0.12);
+}
+.kw-violet{
+  background: rgba(139,92,246,0.08);
+  color: #5b21b6; /* violet-800 */
+  border-color: rgba(139,92,246,0.12);
+}
+.kw-amber{
+  background: rgba(245,158,11,0.08);
+  color: #92400e; /* amber-800 */
+  border-color: rgba(245,158,11,0.12);
+}
+
+/* responsive: keep chips readable on very small screens */
+@media (max-width:480px){
+  .keyword{ font-size:0.8rem; padding:6px 8px; }
+  .keyword-tiles{ gap:6px; }
+}
+
+/* footer: subtle, muted, centered */
+footer{
+  border-top:1px solid rgba(15,23,42,0.04);
+  margin-top:32px;
+  padding:18px 0;
+  text-align:center;
+  color:var(--muted);
+  font-size:0.9rem;
+  background:transparent;
+}
+
+/* center the Download PDF button at the bottom of the resume card */
+article.resume-card {
+  position: relative;
+  padding-bottom: 80px;
+}
+
+article.resume-card .side-column .btn {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: 22px;
+  display: inline-block;
+}
+
+@media (max-width:780px){
+  article.resume-card {
+    padding-bottom: 32px;
+  }
+  article.resume-card .side-column .btn{
+    position: static;
+    transform: none;
+    margin: 18px auto 0;
+    display: block;
+    width: 100%;
+    text-align: center;
+  }
+}
+
+/* restore LinkedIn-style profile header + icon styling (pre-subcard) */
+.profile{
+  display:flex;
+  gap:18px;
+  align-items:center;
+}
+
+.profile-photo{
+  width:128px;
+  height:128px;
+  border-radius:50%;
+  object-fit:cover;
+  border:2px solid rgba(15,23,42,0.06);
+  box-shadow:0 6px 18px rgba(12,18,32,0.06);
+  background:#fff;
+  flex:0 0 128px;
+}
+
+.profile-info{
+  display:block;
+  min-width:0;
+}
+.profile-info h1{
+  margin:0;
+  font-size:1.25rem;
+  font-weight:700;
+}
+.profile-info .tagline{
+  margin:6px 0 8px;
+  color:var(--muted);
+  font-size:0.95rem;
+}
+
+/* social icon row */
+.profile-meta{
+  display:flex;
+  gap:10px;
+  align-items:center;
+  margin-top:6px;
+}
+
+.social-icon{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:40px;
+  height:40px;
+  border-radius:10px;
+  background: rgba(15,23,42,0.02);
+  color: var(--muted);
+  border:1px solid rgba(15,23,42,0.04);
+  text-decoration:none;
+  transition: all 150ms ease;
+  box-shadow: 0 4px 10px rgba(12,18,32,0.04);
+}
+
+.social-icon svg{ width:20px; height:20px; display:block; }
+
+/* hover / focus matches theme accent */
+.social-icon:hover,
+.social-icon:focus{
+  color: var(--accent-2);
+  background: rgba(37,99,235,0.06);
+  transform: translateY(-2px);
+  border-color: rgba(37,99,235,0.12);
+  outline: none;
+}
+
+/* page cover / hero above the main card */
+.page-hero{
+  width:100%;
+  height:360px; /* dragged down a bit for more visual space */
+   background-size:cover;
+   background-position:center;
+   background-repeat:no-repeat;
+   position:relative;
+   display:block;
+}
+.page-hero::after{
+   content:"";
+   position:absolute;
+   inset:0;
+   /* subtle darkening so white text and profile photo stand out */
+   background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.02));
+   pointer-events:none;
+}
+.page-hero .hero-inner{
+   max-width:var(--max-width);
+   margin:0 auto;
+   height:100%;
+   display:flex;
+   align-items:flex-end; /* keep content near bottom of hero */
+   padding:16px;
+}
+
+/* lift the main card up so it overlaps the hero */
+.page-hero + .container > article.resume-card {
+  margin-top: -200px; /* pulled up further to overlap the hero more */
+   /* keep shadow visible on top of hero */
+   box-shadow:0 16px 34px rgba(12,18,32,0.12);
+}
+
+/* smaller overlap on mobile */
+@media (max-width:780px){
+  .page-hero{height:220px}
+  .page-hero + .container > article.resume-card { margin-top: -96px; }
+}
+
+/* header layout: put name/contacts left and headshot top-right inside the card */
+.resume-header{
+  display: block; /* allow .profile (flex) to control layout like on index.md */
+  padding: 0;
+}
+
+/* force these elements into the left column so they're stacked vertically */
+.resume-header h1,
+.resume-header .profile-meta,
+.resume-header .tagline {
+  grid-column: 1;
+}
+
+/* place headshot in the right column */
+.resume-header .headshot-container {
+  grid-column: 2;
+  justify-self: end;
+  /* align the headshot vertically to the middle of the name+icons block */
+  align-self: center;
+  margin-left: 0;
+}
+
+/* small spacing tweaks: reduce top margins so left column aligns with headshot */
+.resume-header .profile-meta {
+  margin-top: 6px; /* smaller gap under name */
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+.resume-header .tagline {
+  margin-top: 6px;
+  color: var(--muted);
+}
+
+/* ensure the headshot in the header stays a small squarish image (override any larger globals) */
+.resume-header .headshot {
+  width: 120px;
+  height: 120px;
+  max-width: 130%;
+  object-fit: cover;           /* crop to fill the box */
+  border-radius: 8px;          /* slight rounding, change to 0 for perfectly square */
+  border: 1px solid rgba(15,23,42,0.06);
+  box-shadow: 0 6px 16px rgba(12,18,32,0.06);
+  display: block;
+  flex: 0 0 120px;              /* prevent flex from stretching it */
+}
+
+/* slightly larger on wide screens if you prefer, optional */
+@media (min-width:1100px){
+  .resume-header .headshot {
+    width: 112px;
+    height: 112px;
+    flex: 0 0 112px;
+  }
+}
+
+/* mobile: keep it smaller and aligned with stacked layout */
+@media (max-width:780px){
+  .resume-header .headshot {
+    width: 80px;
+    height: 80px;
+    flex: 0 0 80px;
+    border-radius: 6px;
+  }
+}
+
+/* banner-style shading for the resume header */
+.resume-card .resume-header {
+  background: linear-gradient(180deg, rgba(37,99,235,0.06), rgba(37,99,235,0.02));
+  padding: 10px 20px; /* top/bottom: 10px; left/right: 20px */
+  border-radius: calc(var(--radius) - 6px) calc(var(--radius) - 6px) 0 0;
+  border-bottom: 1px solid rgba(15,23,42,0.04);
+}
+
+/* slightly lift header content so it reads as a banner */
+.resume-card .resume-header .profile,
+.resume-card .resume-header h1,
+.resume-card .resume-header .profile-meta,
+.resume-card .resume-header .tagline {
+  margin: 0;
+}
+
+/* ensure the headshot still aligns vertically with header content */
+.resume-card .resume-header .headshot {
+  align-self: center;
+  margin-top: 0;
+}
+
+/* Impact summary widget (typography & color restore) */
+.impact-summary{
+  box-sizing:border-box;
+  background: linear-gradient(180deg, rgba(37,99,235,0.06), rgba(37,99,235,0.02));
+  color: var(--accent); /* darker text for better readability */
+  padding:18px;
+  border-radius:10px;
+  margin:16px 0 22px;
+  border:1px solid rgba(15,23,42,0.04);
+  width: calc(100% + var(--side-width) + 28px);
+  margin-right: calc(-1 * (var(--side-width) + 28px));
+  font-family: inherit;
+}
+
+/* title */
+.impact-summary .impact-title{
+  margin:0 0 12px 0;
+  font-size:1.125rem;
+  font-weight:700;
+  color: var(--accent);
+}
+
+/* grid */
+.impact-summary .impact-grid{
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:12px;
+}
+
+/* tiles */
+.impact-summary .impact-item{
+  background: rgba(255,255,255,0.06);
+  border-radius:8px;
+  padding:12px;
+  text-align:center;
+  border:1px solid rgba(255,255,255,0.04);
+}
+
+/* big metric number */
+.impact-summary .impact-value{
+  font-size:1.6rem;
+  font-weight:800;
+  color: var(--accent); /* use theme accent (darker) */
+  line-height:1;
+}
+
+/* smaller label text */
+.impact-summary .impact-label{
+  font-size:0.875rem;
+  color: var(--muted); /* muted label color */
+  margin-top:8px;
+}
+
+/* responsive: stack metrics on small screens */
+@media (max-width:780px){
+  .impact-summary .impact-grid{
+    grid-template-columns:repeat(1,1fr);
+  }
+  .impact-summary{ padding:14px; }
+}
+
+/* restore small company logo sizing and alignment next to each job title */
+.job-header{
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin-bottom:8px;
+}
+.company-logo{
+  width:40px;
+  height:40px;
+  border-radius:6px;
+  object-fit:cover;
+  background:#fff;
+  border:1px solid rgba(15,23,42,0.06);
+  box-shadow:0 4px 10px rgba(12,18,32,0.04);
+  flex:0 0 40px;
+}
+
+/* keep smaller logo on narrow screens (existing media rule repeats for safety) */
+@media (max-width:780px){
+  .company-logo{width:32px;height:32px;border-radius:6px}
+}
+
+/* make the resume header sit flush with the top edge of the card */
+.resume-card {
+  /* remove the top padding so the header can reach the card edge */
+  padding-top: 0;
+}
+
+/* ensure the header uses the card's top-radius and provides inner padding */
+.resume-card .resume-header {
+  border-radius: var(--radius) var(--radius) 0 0;
+  padding: 20px 28px; /* inner spacing for header content */
+  margin: 0 0 18px 0;  /* spacing between header and card body */
+  background: linear-gradient(180deg, rgba(37,99,235,0.06), rgba(37,99,235,0.02));
+  border-bottom: 1px solid rgba(15,23,42,0.04);
+}
+
+/* ensure header sits flush with the card edge (span full card width) */
+.resume-card {
+  padding-top: 0;         /* keep header at the very top */
+  overflow: visible;     /* allow header to extend to card edges */
+}
+
+/* pull the header out of the card's inner padding so it sits plush to the card edge */
+.resume-card .resume-header {
+  margin: 0 -28px 18px -28px;  /* negative horizontal margins equal to the card inner padding */
+  padding: 18px 28px;          /* inner spacing for header content */
+  border-top-left-radius: var(--radius);
+  border-top-right-radius: var(--radius);
+  border-bottom-left-radius: 0;
+  border-bottom-right-radius: 0;
+}
+
+/* mobile: reduce the horizontal pull so it doesn't overflow small viewports */
+@media (max-width:780px) {
+  .resume-card .resume-header {
+    margin-left: -16px;
+    margin-right: -16px;
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+}
+
+/* header badges: small decorative badges aligned to top-right of resume header */
+.resume-card .resume-header {
+  position: relative; /* ensure absolute badges are positioned relative to the header */
+}
+
+/* convert badge to anchor-based clickable element with hover animation like contact icons */
+.header-badges{ /* ensure same positioning rules remain */
+  position: absolute;
+  right: 28px;
+  top: 12px;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  z-index: 30;
+}
+
+/* clickable badge wrapper (anchor) */
+.header-badge{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width: 112px;
+  height: 112px;
+  padding: 8px;
+  border-radius: 12px;
+  background: linear-gradient(180deg, rgba(37,99,235,0.06), rgba(37,99,235,0.02));
+  border: 1px solid rgba(255,255,255,0.06);
+  box-shadow: 0 6px 16px rgba(12,18,32,0.04);
+  text-decoration:none;
+  color:inherit;
+  transition: all 150ms ease;
+}
+
+/* image inside the badge */
+.header-badge-img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  border-radius: 6px;
+  display:block;
+}
+
+/* hover / focus: match social-icon behavior */
+.header-badge:hover,
+.header-badge:focus{
+  transform: translateY(-2px);
+  background: rgba(37,99,235,0.06);
+  border-color: rgba(37,99,235,0.12);
+  outline: none;
+  box-shadow: 0 10px 28px rgba(12,18,32,0.08);
+}
+
+/* accessible focus ring */
+.header-badge:focus{
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.08);
+  border-color: rgba(37,99,235,0.16);
+}
+
+/* Resources (collapsible) — styled to match impact-summary panel */
+.resources{
+  box-sizing:border-box;
+  background: linear-gradient(180deg, rgba(37,99,235,0.06), rgba(37,99,235,0.02));
+  color: var(--accent);
+  padding:12px;
+  border-radius:10px;
+  margin:14px 0;
+  border:1px solid rgba(15,23,42,0.04);
+  width: calc(100% + var(--side-width) + 28px); /* match impact summary full-card stretch */
+  margin-right: calc(-1 * (var(--side-width) + 28px));
+  font-family: inherit;
+}
+
+/* header row inside resources */
+.resources-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  width:100%;           /* make header span entire resources width */
+  padding: 8px 12px;    /* expand clickable area */
+  box-sizing: border-box;
+  cursor: pointer;      /* indicate it's interactive */
+  user-select: none;
+}
+.resources-title{
+  margin:0;
+  font-size:1rem;
+  font-weight:700;
+  color: var(--accent);
+}
+.toggle-resources{
+  background:transparent;
+  border:0;
+  color:var(--accent-2);
+  font-weight:700;
+  cursor:pointer;
+  padding:6px 8px;
+  border-radius:6px;
+}
+.toggle-resources:hover{ text-decoration:underline; }
+
+/* inner panel */
+.resources-panel{
+  margin-top:12px;
+  color:var(--muted);
+}
+.resources-list{ margin:0; padding-left:18px; }
+.resources-list li{ margin:8px 0; }
+
+/* small tweak so links stand out on the tinted background */
+.resources-list a{ color: var(--accent); text-decoration:none; }
+
+/* ensure resources panel sits above side-column skill blocks so the Expand UI is clickable */
+.resources{
+  position: relative;
+  z-index: 60; /* high so it receives pointer events above absolutely-positioned skill blocks */
+  pointer-events: auto; /* ensure clicks are received */
+}
+
+/* make header clearly interactive */
+.resources-header{
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(0,0,0,0);
+}
+
+/* keep skill-block under resources visually and for pointer-event stacking */
+.skill-block{
+  z-index: 10;
+}
+
+/* responsive: on narrow screens reset stretching */
+@media (max-width:980px){
+  .resources{
+    width:100%;
+    margin-right:0;
+  }
+}
+
+/* resources hover animation: match header-badge behavior (lift + subtle highlight) */
+.resources{
+  transition: all 150ms ease;
+  transform: none;
+  transform-origin: center top;
+  will-change: transform, box-shadow;
+}
+
+.resources:hover,
+.resources:focus-within{
+  transform: translateY(-2px);
+  background: linear-gradient(180deg, rgba(37,99,235,0.08), rgba(37,99,235,0.03)); /* slightly stronger on hover */
+  border-color: rgba(37,99,235,0.12);
+  box-shadow: 0 10px 28px rgba(12,18,32,0.08);
+}
+
+/* accessible keyboard focus ring */
+.resources:focus-within{
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.08), 0 10px 28px rgba(12,18,32,0.08);
+  outline: none;
+}
+
+/* Document modal (moved from inline styles in resume.md)
+   - minimum size at least 70% of viewport (min-width/min-height).
+   - layout and visuals centralized here so resume.md contains no styling. */
+.modal-holder{
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* overlay */
+.doc-modal{
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.78);
+  z-index: 99999;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+
+  /* blur + dim content behind the overlay where supported */
+  backdrop-filter: blur(8px) brightness(0.6);
+  -webkit-backdrop-filter: blur(8px) brightness(0.6);
+}
+
+/* ensure the modal card itself is never blurred by ancestor filters */
+.doc-modal-container{
+  background: #fff;
+  width: min(92vw, 1200px);
+  min-width: 70vw;
+  height: min(92vh, 1100px);
+  min-height: 70vh;
+  border-radius: 8px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+
+  /* defensive: prevent inherited filters/backdrop from blurring the dialog itself */
+  filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+  will-change: transform;
+  position: relative;
+  z-index: 100000; /* keep above the overlay children */
+}
+
+/* header row */
+.doc-modal-header{
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 14px;
+  border-bottom: 1px solid rgba(0,0,0,0.06);
+  background: transparent;
+}
+
+#doc-modal-title{
+  font-size: 16px;
+  font-weight: 700;
+}
+
+/* close button */
+.doc-modal-close{
+  background: #fff;
+  border: 0;
+  font-size: 18px;
+  padding: 6px 10px;
+  cursor: pointer;
+  border-radius: 6px;
+  transition: all 140ms ease;
+}
+.doc-modal-close:hover,
+.doc-modal-close:focus{
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(12,18,32,0.08);
+  outline: none;
+}
+
+/* body area that holds iframe/image */
+.doc-modal-body-wrap{
+  flex: 1;
+  min-height: 0; /* important to let child scroll inside flex */
+  overflow: auto;
+  background: #f8f8f8;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+  padding: 12px;
+}
+
+/* injected content container */
+.doc-modal-body{
+  width: 100%;
+  height: 100%;
+  min-height: 400px;
+  display: flex;
+  align-items: stretch;
+  justify-content: center;
+}
+
+/* responsive tweaks for very small screens */
+@media (max-width:780px){
+  .doc-modal{
+    padding: 12px;
+  }
+  .doc-modal-container{
+    width: 96vw;
+    min-width: 0;
+    height: 88vh;
+    min-height: 60vh;
+    border-radius: 6px;
+  }
+}
+
+/* When modal is open, disable header fixed behavior so it doesn't intercept clicks
+   or sit above the modal. This makes overlay clicks reach the modal overlay and
+   ensures the close button is clickable. */
+body.modal-open .site-header{
+  position: static !important;
+  pointer-events: none; /* let clicks pass through to the overlay */
+  z-index: auto !important;
+}
+
+/* restore pointer events on header children if you need interaction after modal close */
+body.modal-open .site-header * {
+  pointer-events: auto; /* restore clicks for header content */
+}
+
+/* Make resource buttons clearly interactive with hover/focus affordances */
+.resource-btn{
+  background: transparent;
+  border: 0;
+  color: var(--accent-2);
+  padding: 6px 8px;
+  font-weight:600;
+  cursor: pointer;
+  text-decoration: none; /* remove underline by default since we use hover styles */
+  border-radius: 8px;
+  transition: background-color 140ms ease, color 140ms ease, transform 140ms ease;
+}
+
+/* visible hover / focus state so users know the button is clickable */
+.resource-btn:hover,
+.resource-btn:focus{
+  background: rgba(37,99,235,0.10); /* subtle blue tint */
+  color: var(--accent);            /* stronger accent for label */
+  transform: translateY(-2px);
+  outline: none;
+  text-decoration: none;
+}
+
+/* keyboard focus ring for accessibility */
+.resource-btn:focus{
+  box-shadow: 0 0 0 4px rgba(37,99,235,0.08);
+}
+
+/* also highlight the whole resources header on hover */
+.resources-header:hover{
+  background: rgba(15,23,42,0.02);
+  border-radius: 8px;
+}
+
+/* Title font: use the site's sans font so the header title matches page typography */
+.title-font,
+.brand-name.title-font{
+  /* inherit the site's primary UI/sans font (fallback list kept for safety) */
+  font-family: var(--font-sans, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial);
+  font-size: 1.75rem;
+  line-height: 1;
+  font-weight: 700;
+  color: var(--header-title-color, #0f172a);
+  letter-spacing: -0.02em;
+  text-decoration: none;
+  display: inline-block;
+  vertical-align: middle;
+}
+
+/* Projects grid: 2 columns, full width of card, balanced spacing */
+.projects-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 12px;
+}
+
+/* Compact, rectangular project tiles that match Resources / Impact panels */
+.projects-grid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;                 /* slightly tighter spacing */
+  margin-top: 12px;
+  align-items: stretch;
+  grid-auto-rows: 1fr;       /* force rows to equal height so tiles align */
+}
+
+/* Project card: more compact rectangle, match resources/impact visual language */
+.project-card {
+  background: linear-gradient(180deg, rgba(37,99,235,0.04), rgba(37,99,235,0.01)); /* same subtle tint as resources/impact */
+  border: 1px solid rgba(15,23,42,0.04);
+  box-shadow: 0 6px 16px rgba(12,18,32,0.04); /* lighter shadow */
+  padding: 12px 14px;        /* reduced vertical padding */
+  border-radius: 10px;
+  min-height: 110px;         /* compact height */
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between; /* keep title/top and role/bottom separated */
+  cursor: pointer;
+  transition: transform .14s ease, box-shadow .14s ease;
+  height: 100%;              /* fill grid cell */
+}
+.project-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 10px 26px rgba(12,18,32,0.06);
+}
+
+/* Make tile color change obvious when toggled to STAR and keep size stable */
+.project-card {
+  transition: background-color .18s ease, border-color .18s ease, box-shadow .18s ease;
+}
+
+/* STAR visual state: clear background/border change to indicate alternate view */
+.project-card.view-star {
+  background: linear-gradient(180deg, rgba(37,99,235,0.08), rgba(37,99,235,0.02));
+  border-color: rgba(37,99,235,0.12);
+  box-shadow: 0 8px 20px rgba(37,99,235,0.06);
+}
+
+/* Tighter typography for compact cards */
+.project-tag { font-size: 11px; text-transform: uppercase; color: var(--muted); letter-spacing: .04em; }
+.project-title { margin: 6px 0 4px; font-size: 0.98rem; font-weight: 700; color: var(--accent); }
+.project-role { margin-top: 6px; font-size: 12px; color: var(--muted); }
+
+/* GAO detail compacted */
+.project-gao-dl { margin-top: 6px; }
+.project-gao-dl dt { display: inline-block; width: 48px; font-weight:700; color:var(--muted); font-size:11px; vertical-align:top; }
+.project-gao-dl dd { display: inline-block; margin:0 0 6px 0; font-size:13px; color:var(--accent); }
+
+/* STAR compact view */
+.project-star { display: none; margin-top: 6px; }
+.project-star .star-mini .text-sm { margin: 0 0 6px 0; color: var(--accent); font-size:13px; }
+.project-star .result { color: #065f46; font-weight:600; font-size:13px; }
+
+/* compact SAR grid */
+.grid-sar { display: grid; grid-template-columns: 28px 1fr; gap: 4px 10px; align-items:start; font-size:13px; }
+.grid-sar .label { font-weight:700; color:var(--muted); font-size:11px; }
+
+/* state toggles remain same but ensure inner overflow hidden to avoid tall content pushing card */
+.project-card.view-gao .project-gao { display:block; overflow:hidden; }
+.project-card.view-gao .project-star { display:none; }
+.project-card.view-star .project-gao { display:none; }
+.project-card.view-star .project-star { display:block; overflow:auto; }
+
+/* accessibility focus style (keeps compact look) */
+.project-card:focus { outline: 3px solid rgba(37,99,235,0.08); outline-offset: 2px; }
+
+/* responsive: keep 2x2 until narrow then stack */
+@media (max-width:900px){
+  .projects-grid { grid-template-columns: 1fr; }
+}
+
+/* Make job-level Projects span full card width (same approach used for .resources) */
+.projects{
+  box-sizing: border-box;
+  padding: 12px;
+  margin: 14px 0;
+  /* stretch across the main + side column (matches .resources behavior) */
+  width: calc(100% + var(--side-width) + 28px);
+  margin-right: calc(-1 * (var(--side-width) + 28px));
+  position: relative;
+  z-index: 40;           /* sit below resources which uses z-index:60 */
+  background: transparent; /* keep visual neutral; change if you want a panel look */
+}
+
+/* header styling matching Resources */
+.projects-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  width:100%;
+  padding:8px 12px;
+  box-sizing:border-box;
+}
+.projects-title{ margin:0; font-size:1rem; font-weight:700; color:var(--accent); }
+
+/* Projects grid: 2x2 equal tiles filling available width */
+.projects-grid{
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 16px;
+  margin-top: 12px;
+}
+
+/* ensure each project-card fills its grid cell and matches height with its row mate */
+.project-card{
+  display:flex;
+  flex-direction:column;
+  justify-content:flex-start;
+  height:100%;
+  min-height: 160px;
+}
+
+/* make inner elements flexible so cards are visually balanced */
+.project-card .project-gao,
+.project-card .project-star{
+  flex: 1 1 auto;
+}
+
+/* responsive: collapse to single-column on smaller screens */
+@media (max-width: 900px){
+  .projects{
+    width: 100%;
+    margin-right: 0;
+    padding-left: 0;
+    padding-right: 0;
+  }
+  .projects-grid{ grid-template-columns: 1fr; }
+}
+
+/* --- Ensure STAR shows full content without scrolling and tiles keep stable height --- */
+
+/* let JS control the row height by setting --projects-row-height */
+.projects-grid {
+  /* previously: grid-auto-rows: auto / 1fr — use JS-driven variable so all rows match tallest tile */
+  grid-auto-rows: var(--projects-row-height, auto);
+  align-items: start;
+}
+
+/* project cards must fill the allocated grid row and allow content to be visible */
+.project-card {
+  height: 100% !important;   /* fill the grid row set by --projects-row-height */
+  overflow: visible !important;
+}
+
+/* make sure both GAO and STAR content are fully visible inside the card (no internal clipping) */
+.project-card .project-gao,
+.project-card .project-star,
+.project-card .project-star .star-full {
+  display: block !important;
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+/* remove any rule that forced STAR to a capped height / scroll */
+.project-card.view-star { /* ensure no scrollbar is introduced in STAR state */
+  overflow: visible !important;
+}
+.project-card.view-star .project-star {
+  max-height: none !important;
+  overflow: visible !important;
+}
+
+/* keep visual state change for STAR but do not alter sizing */
+.project-card.view-star {
+  background: linear-gradient(180deg, rgba(37,99,235,0.08), rgba(37,99,235,0.02));
+  border-color: rgba(37,99,235,0.12);
+  box-shadow: 0 8px 20px rgba(37,99,235,0.06);
+}
+
+/* responsive fallback: on very narrow screens let rows size naturally */
+@media (max-width:900px){
+  .projects-grid { grid-auto-rows: auto; }
+  .project-card { height: auto !important; }
+}
+
+/* Restore GAO-only default and show STAR only when card has .view-star */
+
+/* Ensure GAO is visible by default and STAR hidden */
+.project-card .project-gao {
+  display: block !important;
+  overflow: visible !important;
+}
+.project-card .project-star {
+  display: none !important;
+  overflow: hidden !important;
+}
+
+/* When card is in STAR state, hide GAO and show STAR (full content visible) */
+.project-card.view-star .project-gao {
+  display: none !important;
+  overflow: hidden !important;
+}
+.project-card.view-star .project-star {
+  display: block !important;
+  overflow: visible !important;
+  max-height: none !important;
+}
+
+/* Keep GAO view compact (prevent accidental expansion) */
+.project-card.view-gao .project-gao {
+  display: block !important;
+  overflow: hidden !important;
+}
+
+/* Ensure switch knob animates when either the card OR the switch element reflects STAR state.
+   This makes the knob visually in-sync whether user clicks the card or the switch. */
+
+/* knob base */
+.toggle-project .slider::before {
+  transform: translateX(0);
+  transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .14s ease;
+}
+
+/* animate knob when the card is in STAR state (existing behavior) */
+.project-card.view-star .toggle-project .slider::before {
+  transform: translateX(22px);
+  box-shadow: 0 10px 24px rgba(37,99,235,0.12);
+}
+
+/* also animate when the wrapper explicitly has .is-star (keeps sync if JS updates wrapper instead of card) */
+.toggle-project.is-star .slider::before {
+  transform: translateX(22px);
+  box-shadow: 0 10px 24px rgba(37,99,235,0.12);
+}
+
+/* and animate when the switch element reports aria-checked (accessible state) */
+.toggle-project .switch[aria-checked="true"] .slider::before {
+  transform: translateX(22px);
+  box-shadow: 0 10px 24px rgba(37,99,235,0.12);
+}
+
+/* subtle pill color for STAR state driven by any of the above states */
+.project-card.view-star .toggle-project .slider,
+.toggle-project.is-star .slider,
+.toggle-project .switch[aria-checked="true"] .slider {
+  background: linear-gradient(180deg, rgba(37,99,235,0.12), rgba(37,99,235,0.04));
+  box-shadow: 0 6px 16px rgba(37,99,235,0.04);
+}
+
+/* make sure the switch remains visually subtle and non-competing with content */
+.toggle-project { opacity: 0.95; }
+.toggle-project .label-gao,
+.toggle-project .label-star { color: var(--muted); font-size:11px; font-weight:600; }
+
+/* restore absolute positioning for per-card switch and iOS-like subtle styling */
+.project-card {
+  position: relative; /* allow absolute-positioned controls inside card */
+}
+
+/* place the toggle in the top-right and keep it visually subtle */
+.toggle-project {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  z-index: 40;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  pointer-events: auto;
+  user-select: none;
+  align-self: flex-start;
+}
+
+/* compact muted labels */
+.toggle-project .label-gao,
+.toggle-project .label-star {
+  font-size: 11px;
+  color: var(--muted);
+  font-weight: 600;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+/* compact iOS-like switch (pill + knob) */
+.toggle-project .switch {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 26px;
+  border-radius: 999px;
+  cursor: pointer;
+  -webkit-tap-highlight-color: transparent;
+  flex: 0 0 auto;
+}
+
+/* visual pill background (slider) */
+.toggle-project .slider {
+  position: absolute;
+  inset: 0;
+  background: rgba(15,23,42,0.06);
+  border-radius: 999px;
+  transition: background-color .22s cubic-bezier(.2,.9,.2,1), box-shadow .18s ease;
+  pointer-events: none; /* input/switch element handles interaction */
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.04);
+}
+
+/* knob */
+.toggle-project .slider::before {
+  content: "";
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 3px;
+  top: 3px;
+  background: #fff;
+  border-radius: 50%;
+  box-shadow: 0 6px 18px rgba(2,6,23,0.12);
+  transition: transform .22s cubic-bezier(.2,.9,.2,1), box-shadow .14s ease;
+  will-change: transform;
+}
+
+/* STAR visual applied by .view-star on card (keeps knob in sync with card clicks) */
+.project-card.view-star .toggle-project .slider {
+  background: linear-gradient(180deg, rgba(37,99,235,0.12), rgba(37,99,235,0.04));
+  box-shadow: 0 6px 16px rgba(37,99,235,0.04);
+}
+.project-card.view-star .toggle-project .slider::before {
+  transform: translateX(22px);
+  box-shadow: 0 10px 24px rgba(37,99,235,0.12);
+}
+
+/* wrapper-level class fallback used by JS to mirror state */
+.toggle-project.is-star .slider::before {
+  transform: translateX(22px);
+  box-shadow: 0 10px 24px rgba(37,99,235,0.12);
+}
+
+/* focus / hover affordances kept subtle */
+.toggle-project .switch:focus-visible + .slider,
+.toggle-project .switch:hover + .slider {
+  box-shadow: 0 8px 18px rgba(12,18,32,0.06);
+}
+.toggle-project .switch:focus-visible + .slider {
+  outline: 3px solid rgba(37,99,235,0.10);
+  outline-offset: 3px;
+}
+
+/* subtle emphasis for the active label via existing card state (no layout shift) */
+.project-card.view-star .label-star { color: var(--accent-2); font-weight:700; transform: translateY(-1px); }
+.project-card:not(.view-star) .label-gao { color: var(--accent-2); font-weight:700; transform: translateY(-1px); }
+
+/* smaller on narrow screens so it doesn't crowd header */
+@media (max-width:900px){
+  .toggle-project { top: 6px; right: 8px; gap:6px; }
+  .toggle-project .switch { width: 44px; height: 24px; }
+  .toggle-project .slider::before { width: 18px; height: 18px; left: 3px; top: 3px; }
+  .project-card.view-star .toggle-project .slider::before { transform: translateX(18px); }
+}
+
+/* Normalize GAO dl so headings are always on their own line and descriptors follow */
+.project-gao-dl {
+  margin: 6px 0 0;
+  padding: 0;
+}
+.project-gao-dl > div {
+  margin: 0 0 8px 0; /* small gap between pairs */
+  line-height: 1.35;
+}
+.project-gao-dl dt {
+  display: block;                 /* ensure heading sits on its own line */
+  margin: 0 0 4px 0;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--muted);
+  text-transform: none;
+  letter-spacing: 0;
+}
+.project-gao-dl dd {
+  display: block;                 /* descriptor on next line */
+  margin: 0 0 6px 0;
+  padding-left: 0;                /* no extra indent */
+  color: var(--accent);
+  font-size: 13px;
+  line-height: 1.35;
+  white-space: normal;            /* prevent forced single-line behavior */
+}
+
+/* Add clear separation between Projects and the following Resources/Impact panels */
+.projects {
+  /* keep existing stretch behavior but add extra vertical separation */
+  margin: 14px 0 28px;   /* increased bottom margin to give breathing room */
+  padding: 12px 0 8px;   /* small bottom padding so tiles don't butt against next panel */
+  position: relative;
+  z-index: 40;           /* sit below resources which uses z-index:60 */
+}
+
+/* Slight explicit gap when resources immediately follow projects */
+.projects + .resources,
+.projects + .impact-summary {
+  margin-top: 18px;      /* ensure a gap even if negative widths are used */
+}
+
+/* Ensure project tiles don't float above resources visually */
+.projects-grid { z-index: 40; }
+
+/* Keep resource panel visually on top and clickable (existing) */
+.resources { z-index: 60; pointer-events: auto; }
+
+/* If any card shadows visually collide, reduce project card shadow or raise resources */
+.project-card { z-index: 41; }
+
+/* Responsive tweak: keep spacing proportional on small screens */
+@media (max-width:900px){
+  .projects { margin-bottom: 20px; padding-bottom: 8px; }
+  .projects + .resources { margin-top: 12px; }
+}
+
+/* --- About Page: Hero, Cards, Animations, and Friendly Design --- */
+
+.about-page { padding: 0; }
+
+/* Hero Section */
+.about-hero {
+  padding: 40px 24px;
+  background: linear-gradient(135deg, 
+    rgba(37, 99, 235, 0.08) 0%, 
+    rgba(168, 85, 247, 0.06) 50%, 
+    rgba(34, 197, 94, 0.04) 100%);
+  border-radius: 0;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  align-items: center;
+  min-height: 460px;
+}
+
+.hero-content {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 40px;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+.hero-text { z-index: 10; }
+
+.hero-title {
+  font-size: 2.8rem;
+  font-weight: 800;
+  line-height: 1.1;
+  margin: 0 0 12px;
+  background: linear-gradient(135deg, #2563eb, #7c3aed, #22c55e);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: fadeInUp .6s ease-out;
+}
+
+.hero-subtitle {
+  font-size: 1.2rem;
+  color: var(--accent-2);
+  font-weight: 600;
+  margin: 0 0 16px;
+  animation: fadeInUp .6s ease-out .1s both;
+}
+
+.hero-description {
+  color: var(--accent);
+  font-size: 1rem;
+  line-height: 1.6;
+  margin: 0 0 24px;
+  animation: fadeInUp .6s ease-out .2s both;
+}
+
+.hero-cta {
+  display: flex;
+  gap: 12px;
+  animation: fadeInUp .6s ease-out .3s both;
+}
+
+.btn {
+  padding: 10px 18px;
+  border-radius: 10px;
+  font-weight: 600;
+  font-size: 0.95rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: all .2s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  color: #fff;
+  box-shadow: 0 10px 24px rgba(37, 99, 235, 0.12);
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 32px rgba(37, 99, 235, 0.18);
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--accent-2);
+  border: 2px solid rgba(37, 99, 235, 0.2);
+}
+
+.btn-secondary:hover {
+  background: rgba(37, 99, 235, 0.06);
+  border-color: rgba(37, 99, 235, 0.4);
+}
+
+/* Hero Visuals */
+.hero-visual {
+  position: relative;
+  height: 360px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.bg-blob {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(40px);
+  animation: float 6s ease-in-out infinite;
+}
+
+.blob-1 {
+  width: 200px;
+  height: 200px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.2), rgba(168, 85, 247, 0.2));
+  top: 20%;
+  left: 10%;
+  animation-delay: 0s;
+}
+
+.blob-2 {
+  width: 160px;
+  height: 160px;
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.2), rgba(59, 130, 246, 0.2));
+  bottom: 20%;
+  right: 15%;
+  animation-delay: 2s;
+}
+
+.floating-card {
+  position: absolute;
+  background: #fff;
+  padding: 16px 20px;
+  border-radius: 12px;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.08);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: var(--accent-2);
+  z-index: 20;
+  animation: float 4s ease-in-out infinite;
+}
+
+.floating-card .icon { font-size: 2rem; }
+
+.card-1 {
+  top: 40px;
+  left: 20px;
+  animation-delay: 0s;
+}
+
+.card-2 {
+  top: 50%;
+  right: 30px;
+  transform: translateY(-50%);
+  animation-delay: 1s;
+}
+
+.card-3 {
+  bottom: 40px;
+  left: 60px;
+  animation-delay: 0.5s;
+}
+
+/* About Content */
+.about-content {
+  padding: 40px 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.about-content h2 {
+  font-size: 1.8rem;
+  margin: 0 0 28px;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.about-content > p {
+  color: var(--accent);
+  line-height: 1.7;
+  margin-bottom: 16px;
+}
+
+.text-link {
+  color: var(--accent-2);
+  font-weight: 600;
+  text-decoration: none;
+  border-bottom: 2px solid rgba(37, 99, 235, 0.3);
+  transition: all .2s ease;
+}
+
+.text-link:hover {
+  border-bottom-color: var(--accent-2);
+  color: #2563eb;
+}
+
+/* Interest Grid */
+.interest-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+  margin-bottom: 32px;
+}
+
+.interest-card {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.8), rgba(250, 250, 255, 0.6));
+  border: 1px solid rgba(15, 23, 42, 0.06);
+  padding: 22px;
+  border-radius: 12px;
+  transition: all .3s cubic-bezier(.2, .9, .2, 1);
+  cursor: default;
+}
+
+.interest-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.08);
+  border-color: rgba(37, 99, 235, 0.1);
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 250, 255, 0.8));
+}
+
+.interest-card .interest-icon {
+  font-size: 2.2rem;
+  display: block;
+  margin-bottom: 10px;
+}
+
+.interest-card h3 {
+  font-size: 1.1rem;
+  margin: 0 0 8px;
+  color: #0f172a;
+  font-weight: 700;
+}
+
+.interest-card p {
+  color: var(--accent);
+  font-size: 0.95rem;
+  margin: 0;
+  line-height: 1.5;
+}
+
+/* Footer Stats */
+.about-footer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+  margin-top: 40px;
+  padding-top: 28px;
+  border-top: 2px solid rgba(15, 23, 42, 0.06);
+}
+
+.footer-stat {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.stat-number {
+  font-size: 2.2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #2563eb, #7c3aed);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.stat-label {
+  font-size: 0.85rem;
+  color: var(--muted);
+  font-weight: 600;
+  margin-top: 6px;
+}
+
+/* Keyframe animations */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 24px;
+  }
+  
+  .hero-title { font-size: 2rem; }
+  .hero-subtitle { font-size: 1rem; }
+  .hero-visual { height: 240px; }
+  
+  .interest-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .about-footer {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/* ============================================================
+   CONTACT PAGE
+   ============================================================ */
+.contact-page { padding: 32px 28px; }
+
+.contact-hero {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.contact-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin: 0 0 10px;
+}
+.contact-subtitle {
+  color: var(--muted);
+  font-size: 1.05rem;
+  max-width: 520px;
+  margin: 0 auto;
+  line-height: 1.6;
+}
+
+/* Two-column layout: form | info panel */
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 280px;
+  gap: 32px;
+  align-items: start;
+}
+
+/* Form */
+.contact-form { display: flex; flex-direction: column; gap: 18px; }
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+
+.form-group label {
+  font-size: 0.88rem;
+  font-weight: 600;
+  color: var(--accent);
+}
+.form-group .required { color: #e53e3e; }
+
+.form-group input,
+.form-group textarea {
+  padding: 10px 14px;
+  border: 1.5px solid rgba(37,99,235,0.18);
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-family: inherit;
+  color: var(--accent);
+  background: #fff;
+  transition: border-color .15s ease, box-shadow .15s ease;
+  outline: none;
+  width: 100%;
+  box-sizing: border-box;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: var(--accent-2);
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.1);
+}
+.form-group input::placeholder,
+.form-group textarea::placeholder { color: #a0aec0; }
+.form-group textarea { resize: vertical; min-height: 130px; }
+
+.form-actions { display: flex; justify-content: flex-start; }
+.contact-submit {
+  display: inline-flex;
+  align-items: center;
+  padding: 11px 28px;
+  font-size: 0.97rem;
+  font-weight: 700;
+  border: none;
+  cursor: pointer;
+  border-radius: 8px;
+}
+
+/* Info panel */
+.contact-info { display: flex; flex-direction: column; gap: 18px; }
+
+.contact-info-card {
+  background: linear-gradient(180deg, rgba(37,99,235,0.06), rgba(239,246,255,0.8));
+  border: 1px solid rgba(37,99,235,0.14);
+  border-radius: 12px;
+  padding: 20px;
+}
+.contact-info-card h3 {
+  font-size: 1rem;
+  font-weight: 700;
+  margin: 0 0 10px;
+  color: var(--accent);
+}
+.contact-info-card p {
+  font-size: 0.9rem;
+  color: var(--muted);
+  margin: 0 0 10px;
+}
+.contact-topics {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+.contact-topics li {
+  font-size: 0.9rem;
+  color: var(--accent);
+  padding: 6px 10px;
+  background: rgba(255,255,255,0.7);
+  border-radius: 6px;
+  border: 1px solid rgba(37,99,235,0.1);
+}
+
+.contact-links { display: flex; flex-direction: column; gap: 10px; }
+.contact-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.88rem;
+  color: var(--accent-2);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color .15s;
+  word-break: break-all;
+}
+.contact-link:hover { color: #1d4ed8; }
+.contact-link svg { flex-shrink: 0; }
+
+@media (max-width: 700px) {
+  .contact-layout { grid-template-columns: 1fr; }
+  .form-row { grid-template-columns: 1fr; }
+  .contact-page { padding: 20px 16px; }
+}
+
+/* ============================================================
+   PROJECTS PAGE — expandable animated project cards
+   ============================================================ */
+.projects-page { padding: 32px 28px; }
+
+.projects-page-hero {
+  text-align: center;
+  margin-bottom: 36px;
+}
+.projects-page-title {
+  font-size: 2.2rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin: 0 0 10px;
+}
+.projects-page-subtitle {
+  color: var(--muted);
+  font-size: 1.05rem;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+/* Stack of expandable cards */
+.proj-grid { display: flex; flex-direction: column; gap: 14px; }
+
+/* Individual expandable card */
+.proj-card {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: linear-gradient(180deg, #ffffff, #f8fbff);
+  box-shadow: 0 4px 14px rgba(37,99,235,0.06);
+  overflow: hidden;
+  cursor: pointer;
+  transition: box-shadow .2s ease, transform .2s ease, border-color .2s ease;
+  outline: none;
+}
+.proj-card:hover {
+  box-shadow: 0 8px 28px rgba(37,99,235,0.1);
+  transform: translateY(-2px);
+  border-color: rgba(37,99,235,0.22);
+}
+.proj-card:focus-visible {
+  box-shadow: 0 0 0 3px rgba(37,99,235,0.18), 0 8px 28px rgba(37,99,235,0.08);
+}
+.proj-card[aria-expanded="true"] {
+  border-color: rgba(37,99,235,0.28);
+  box-shadow: 0 10px 32px rgba(37,99,235,0.12);
+}
+
+/* Teaser row (always visible) */
+.proj-teaser {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 18px 20px;
+}
+
+.proj-icon {
+  font-size: 2rem;
+  flex: 0 0 44px;
+  height: 44px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(37,99,235,0.07);
+  border-radius: 10px;
+}
+
+.proj-meta { flex: 1; min-width: 0; }
+
+.proj-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-bottom: 6px;
+}
+.proj-chip {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 2px 9px;
+  border-radius: 999px;
+  letter-spacing: 0.02em;
+}
+.chip-blue   { background: rgba(37,99,235,0.1);  color: #1e40af; border: 1px solid rgba(37,99,235,0.18); }
+.chip-violet { background: rgba(124,58,237,0.09); color: #5b21b6; border: 1px solid rgba(124,58,237,0.16); }
+.chip-emerald{ background: rgba(16,185,129,0.09); color: #065f46; border: 1px solid rgba(16,185,129,0.16); }
+.chip-amber  { background: rgba(245,158,11,0.09); color: #92400e; border: 1px solid rgba(245,158,11,0.16); }
+
+.proj-title {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--accent);
+  margin: 0 0 5px;
+}
+.proj-summary {
+  font-size: 0.93rem;
+  color: var(--muted);
+  line-height: 1.5;
+  margin: 0;
+}
+
+/* Expand/collapse chevron button */
+.proj-toggle {
+  flex: 0 0 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(37,99,235,0.07);
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  margin-top: 2px;
+  transition: background .15s ease;
+}
+.proj-toggle:hover { background: rgba(37,99,235,0.14); }
+
+.proj-chevron {
+  color: var(--accent-2);
+  transition: transform .25s cubic-bezier(.2,.9,.2,1);
+}
+.proj-card[aria-expanded="true"] .proj-chevron {
+  transform: rotate(180deg);
+}
+
+/* Expandable detail panel — animated via max-height */
+.proj-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .35s cubic-bezier(.2,.9,.2,1);
+}
+.proj-detail:not([hidden]) {
+  max-height: 1200px; /* large enough for any content */
+}
+/* When hidden attribute is removed by JS, remove display:none */
+.proj-detail[hidden] { display: block !important; max-height: 0; visibility: hidden; }
+.proj-detail:not([hidden]) { visibility: visible; }
+
+.proj-detail-inner {
+  padding: 0 20px 22px 20px;
+  border-top: 1px solid rgba(37,99,235,0.1);
+  animation: fadeInUp .25s ease-out;
+}
+.proj-detail-inner h3 {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--accent);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin: 18px 0 7px;
+}
+.proj-detail-inner p {
+  font-size: 0.95rem;
+  color: var(--accent);
+  line-height: 1.65;
+  margin: 0 0 8px;
+}
+.proj-detail-inner ul {
+  margin: 0 0 8px;
+  padding-left: 20px;
+}
+.proj-detail-inner li {
+  font-size: 0.93rem;
+  color: var(--accent);
+  line-height: 1.55;
+  margin-bottom: 4px;
+}
+.proj-detail-inner code {
+  background: rgba(37,99,235,0.07);
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-size: 0.88em;
+  color: #1e40af;
+}
+.proj-links {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  margin-top: 18px;
+}
+.proj-link {
+  font-size: 0.9rem;
+  padding: 8px 18px;
+}
+
+@media (max-width: 600px) {
+  .projects-page { padding: 20px 16px; }
+  .proj-teaser { gap: 12px; padding: 14px 16px; }
+  .proj-detail-inner { padding: 0 16px 18px; }
+  .proj-icon { font-size: 1.6rem; flex: 0 0 38px; height: 38px; }
+}

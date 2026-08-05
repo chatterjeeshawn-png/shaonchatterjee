@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>{{ title }}</title>
+  <link rel="stylesheet" href="/static/styles.css?v=8"/>
+  <link rel="stylesheet" href="/static/resume.css?v=3"/>
+</head>
+<body>
+  <header class="site-header" role="banner">
+    <div class="site-header-inner container">
+      <div class="brand" aria-hidden="false">
+        <span class="brand-name title-font">Shaon Chatterjee</span>
+      </div>
+
+      <nav class="site-nav" role="navigation" aria-label="Main navigation">
+        <ul class="nav-list">
+          <li><a href="/">Home</a></li>
+          <li><a href="/about/">About</a></li>
+          <li><a href="/resume/">Resume</a></li>
+          <li><a href="/projects/">Projects</a></li>
+          <li><a href="/blog/">Blog</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  {{ content }}
+
+  <!-- global app JS (loaded on all pages) -->
+  <script src="/static/resume.js?v=1" defer></script>
+</body>
+</html>
