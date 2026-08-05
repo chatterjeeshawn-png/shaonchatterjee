@@ -7,3 +7,7 @@ __pycache__/
 node_modules/
 .env
 .venv
+
+# Private static assets — kept on local disk but excluded from GitHub
+static/images/
+static/curam_pm_portfolio_caseworker_CLEAN-Page-2.jpg
