@@ -423,16 +423,29 @@
       var detail = card.querySelector('.proj-detail');
       if (!detail) return;
 
+      function expand() {
+        detail.removeAttribute('hidden');
+        // set to actual scroll height so content is never clipped
+        detail.style.maxHeight = detail.scrollHeight + 'px';
+        card.setAttribute('aria-expanded', 'true');
+      }
+
+      function collapse() {
+        detail.style.maxHeight = '0';
+        card.setAttribute('aria-expanded', 'false');
+        // restore hidden after transition ends
+        detail.addEventListener('transitionend', function onEnd() {
+          detail.removeEventListener('transitionend', onEnd);
+          if (card.getAttribute('aria-expanded') === 'false') {
+            detail.setAttribute('hidden', '');
+          }
+        });
+      }
+
       function toggle(ev) {
         // don't intercept clicks on links inside the expanded panel
-        if (ev && ev.target && ev.target.closest('a, button.proj-toggle') === null && ev.target.closest('.proj-detail') !== null) return;
-        var expanded = card.getAttribute('aria-expanded') === 'true';
-        card.setAttribute('aria-expanded', String(!expanded));
-        if (expanded) {
-          detail.setAttribute('hidden', '');
-        } else {
-          detail.removeAttribute('hidden');
-        }
+        if (ev && ev.target && ev.target.closest('.proj-detail') !== null && !ev.target.closest('.proj-toggle')) return;
+        card.getAttribute('aria-expanded') === 'true' ? collapse() : expand();
       }
 
       card.addEventListener('click', toggle);
@@ -440,9 +453,15 @@
         if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); toggle(e); }
       });
 
-      // toggle button (chevron) — handled by card click already, just prevent double-fire
       var btn = card.querySelector('.proj-toggle');
       if (btn) btn.addEventListener('click', function (e) { e.stopPropagation(); toggle(e); });
+
+      // recalculate max-height if window resizes while a card is open
+      window.addEventListener('resize', debounce(function () {
+        if (card.getAttribute('aria-expanded') === 'true') {
+          detail.style.maxHeight = detail.scrollHeight + 'px';
+        }
+      }, 150));
     });
   }
 
