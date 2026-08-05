@@ -56,7 +56,7 @@ title: Projects
               Building without a framework forces deliberate decisions at every layer. I gained a much deeper understanding of how browsers render HTML/CSS and how static hosting pipelines work end-to-end.
             </p>
             <div class="proj-links">
-              <a class="btn btn-primary proj-link" href="https://github.com" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+              <a class="btn btn-primary proj-link" href="https://github.com/chatterjeeshawn-png/shaonchatterjee" target="_blank" rel="noopener noreferrer">View on GitHub</a>
               <a class="btn btn-secondary proj-link" href="/">Live Site</a>
             </div>
           </div>
@@ -108,7 +108,7 @@ title: Projects
               Serverless functions are deceptively simple to start but require careful attention to cold start times, memory limits, and error handling at scale. Infrastructure-as-code (Terraform) made the setup reproducible and portable.
             </p>
             <div class="proj-links">
-              <a class="btn btn-primary proj-link" href="https://github.com" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+              <a class="btn btn-primary proj-link" href="https://github.com/chatterjeeshawn-png/shaonchatterjee" target="_blank" rel="noopener noreferrer">View on GitHub</a>
             </div>
           </div>
         </div>
@@ -159,8 +159,8 @@ title: Projects
               Financial modelling in the browser taught me how to balance precision (floating-point edge cases in currency math) with usability — and reinforced the value of privacy-first design where no backend is ever needed.
             </p>
             <div class="proj-links">
-              <a class="btn btn-primary proj-link" href="/finance-tools/" >Try the Tools</a>
-              <a class="btn btn-secondary proj-link" href="https://github.com" target="_blank" rel="noopener noreferrer">View on GitHub</a>
+              <a class="btn btn-primary proj-link" href="/finance-tools/">Try the Tools</a>
+              <a class="btn btn-secondary proj-link" href="https://github.com/chatterjeeshawn-png/shaonchatterjee" target="_blank" rel="noopener noreferrer">View on GitHub</a>
             </div>
           </div>
         </div>
