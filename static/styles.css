@@ -339,7 +339,7 @@ article h1, article h2, article h3,
   .layout{grid-template-columns:1fr; gap:18px}
   .resume-header{flex-direction:column; align-items:flex-start}
   .btn{width:100%; text-align:center}
-  .company-logo{width:32px;height:32px;border-radius:6px}
+  .company-logo{width:40px;height:40px;border-radius:6px;padding:3px;}
 }
 
 /* side column alignment (simple right alignment) */
@@ -800,22 +800,23 @@ article.resume-card .side-column .btn {
   margin-bottom:8px;
 }
 .company-logo{
-  width:40px;
-  height:40px;
-  border-radius:6px;
-  object-fit:cover;
+  width:52px;
+  height:52px;
+  border-radius:8px;
+  object-fit:contain;
+  object-position:center;
+  padding:4px;
   background:#fff;
-  border:1px solid rgba(15,23,42,0.06);
-  box-shadow:0 4px 10px rgba(12,18,32,0.04);
-  flex:0 0 40px;
+  border:1px solid rgba(15,23,42,0.08);
+  box-shadow:0 4px 12px rgba(12,18,32,0.06);
+  flex:0 0 52px;
+  image-rendering:-webkit-optimize-contrast;
 }
 
 /* keep smaller logo on narrow screens (existing media rule repeats for safety) */
 @media (max-width:780px){
-  .company-logo{width:32px;height:32px;border-radius:6px}
-}
-
-/* make the resume header sit flush with the top edge of the card */
+  .company-logo{width:40px;height:40px;border-radius:6px;padding:3px;}
+} with the top edge of the card */
 .resume-card {
   /* remove the top padding so the header can reach the card edge */
   padding-top: 0;
