@@ -84,6 +84,55 @@
   .toggle-project .slider::before{ width:18px; height:18px; left:3px; top:3px; }
 }
 
+/* Mobile-only readability and overlap fixes. Desktop remains unchanged. */
+@media (max-width:980px){
+  .resume-card .resume-header{ padding:14px 16px !important; }
+  .profile{ flex-direction:column; align-items:flex-start; gap:10px; }
+  .header-badges{ display:flex; flex-wrap:wrap; gap:8px; margin-top:8px; }
+  .header-badge-img{ width:32px; height:32px; }
+
+  .layout{ display:block !important; gap:0 !important; }
+  .main-column,
+  .side-column{ width:100% !important; grid-column:auto !important; grid-row:auto !important; }
+  .side-column{ margin-top:12px; align-items:stretch !important; }
+
+  .skills-column{ position:static !important; min-height:0 !important; }
+  .skill-block{ position:static !important; width:100% !important; margin:0 0 14px !important; text-align:left !important; }
+  .skill-block .skills-heading{ justify-content:flex-start; }
+  .skill-block .skills{ width:100% !important; }
+
+  .projects,
+  .impact-summary{
+    width:100% !important;
+    margin-left:0 !important;
+    margin-right:0 !important;
+    padding:10px !important;
+  }
+
+  .projects-grid{ grid-template-columns:1fr !important; gap:12px !important; }
+  .project-card{ min-height:0 !important; height:auto !important; padding:12px !important; }
+  .toggle-project{ position:static !important; margin:0 0 8px 0; justify-content:flex-end; }
+
+  .project-title,
+  .project-role,
+  .project-gao-dl dd,
+  .grid-sar > div{ overflow-wrap:anywhere; word-break:break-word; }
+
+  .company-logo{ width:44px; height:44px; flex:0 0 44px; }
+  .job-header{ align-items:flex-start; gap:10px; }
+
+  .tableau-section.resume-card{ margin:18px 0 0 0 !important; padding:16px !important; }
+  .tableauPlaceholder{ min-height:300px !important; }
+}
+
+@media (max-width:640px){
+  .profile-summary p,
+  .job ul li,
+  .project-gao-dl dd,
+  .project-role,
+  .impact-label{ line-height:1.55; }
+}
+
 /* ============================================================
    PRINT / PDF STYLES
    Clean resume layout — no interactive components.

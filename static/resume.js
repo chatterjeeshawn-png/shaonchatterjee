@@ -61,6 +61,78 @@
 
   // Initialize resource buttons (strict in-modal enforcement)
   function initResourceButtons() {
+    function escapeAttr(value) {
+      return String(value || '').replace(/&/g, '&amp;').replace(/"/g, '&quot;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+    }
+
+    function webLinkHtml(webUrl, title) {
+      if (!webUrl) return '';
+      var label = title || 'Article';
+      return '<p style="margin:0 0 10px 0;"><a href="' + escapeAttr(webUrl) + '" target="_blank" rel="noopener noreferrer" class="btn">View article in new tab</a></p>';
+    }
+
+    function withPdfZoom(url) {
+      var u = String(url || '');
+      if (!u) return u;
+      return u + (u.indexOf('#') >= 0 ? '&' : '#') + 'zoom=page-width&view=FitH';
+    }
+
+    function fileKindFromSrc(src) {
+      var s = String(src || '').toLowerCase();
+      if (/\.pdf(?:\?|#|$)/.test(s)) return 'pdf';
+      if (/\.(png|jpe?g|gif|webp|svg)(?:\?|#|$)/.test(s)) return 'image';
+      if (/\.mp4(?:\?|#|$)/.test(s)) return 'video';
+      return 'other';
+    }
+
+    function buildViewerHtml(url, kind, title, webUrl) {
+      var safeTitle = escapeAttr(title || 'Document');
+      var link = webLinkHtml(webUrl, title);
+      if (kind === 'pdf') {
+        return link + '<iframe src="' + withPdfZoom(url) + '" style="width:100%;height:100%;border:0;" aria-label="' + safeTitle + '"></iframe>';
+      }
+      if (kind === 'image') {
+        return link +
+          '<div style="width:100%;height:100%;overflow:auto;display:flex;align-items:flex-start;justify-content:center;background:#f6f7fb;">' +
+          '<img src="' + url + '" alt="' + safeTitle + '" style="max-width:100%;height:auto;display:block;" />' +
+          '</div>';
+      }
+      if (kind === 'video') {
+        return link +
+          '<div style="width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:#0b1020;">' +
+          '<video controls preload="metadata" style="width:100%;max-height:100%;background:#000;">' +
+          '<source src="' + url + '" type="video/mp4" />' +
+          '</video>' +
+          '</div>';
+      }
+      return link + '<iframe src="' + url + '" style="width:100%;height:100%;border:0;" aria-label="' + safeTitle + '"></iframe>';
+    }
+
+    function canEmbedExternal(src) {
+      // Some publishers explicitly block iframe embedding.
+      return !/^https?:\/\/([^/]*\.)?wjla\.com\//i.test(src);
+    }
+
+    function externalFallbackHtml(src, title) {
+      var label = title || 'Web page';
+      return '' +
+        '<div class="external-viewer-fallback" style="padding:16px;">' +
+        '<p style="margin:0 0 10px 0;font-weight:600;">This site blocks in-app embedding.</p>' +
+        '<p class="muted" style="margin:0 0 14px 0;">Open "' + label + '" in a new tab.</p>' +
+        '<p style="margin:0;"><a href="' + src + '" target="_blank" rel="noopener noreferrer" class="btn">Open article</a></p>' +
+        '</div>';
+    }
+
+    function externalViewerHtml(src, title) {
+      var label = title || 'Web page';
+      return '' +
+        '<div class="external-viewer">' +
+        '<p style="margin:0 0 10px 0;"><a href="' + src + '" target="_blank" rel="noopener noreferrer" class="btn">Open article in new tab</a></p>' +
+        '<iframe src="' + src + '" style="width:100%;height:100%;border:0;" aria-label="' + label + '" referrerpolicy="no-referrer-when-downgrade"></iframe>' +
+        '<p class="muted" style="margin-top:10px;">If this site blocks embedded viewing, <a href="' + src + '" target="_blank" rel="noopener noreferrer">open it in a new tab</a>.</p>' +
+        '</div>';
+    }
+
     // Buttons with data-src
     document.querySelectorAll('.resource-btn').forEach(function (btn) {
       if (btn._handled) return;
@@ -69,8 +141,21 @@
         ev.preventDefault();
         ev.stopPropagation();
         var src = btn.getAttribute('data-src');
+        var webUrl = btn.getAttribute('data-web-url');
         var title = btn.getAttribute('data-title') || btn.textContent.trim() || 'Document';
+        var kind = fileKindFromSrc(src);
         if (!src) return;
+
+        // External web pages can fail CORS fetch; open directly in modal iframe.
+        if (/^https?:\/\//i.test(src)) {
+          if (modalBody) {
+            modalBody.innerHTML = canEmbedExternal(src)
+              ? externalViewerHtml(src, title)
+              : externalFallbackHtml(src, title);
+          }
+          window.openDocModal(null, src, title);
+          return;
+        }
 
         // fetch resource and open as blob URL to prevent direct navigation
         fetch(src, { credentials: 'same-origin' }).then(function (res) {
@@ -78,12 +163,12 @@
           return res.blob();
         }).then(function (blob) {
           var blobUrl = URL.createObjectURL(blob);
-          if (modalBody) modalBody.innerHTML = '<iframe src="' + blobUrl + '" style="width:100%;height:100%;border:0;" aria-label="' + (title || 'Document') + '"></iframe>';
+          if (modalBody) modalBody.innerHTML = buildViewerHtml(blobUrl, kind, title, webUrl);
           modal._currentBlob = blobUrl;
           window.openDocModal(null, blobUrl, title);
         }).catch(function () {
           // fallback: open inline with original URL if fetch fails
-          if (modalBody) modalBody.innerHTML = '<iframe src="' + src + '" style="width:100%;height:100%;border:0;" aria-label="' + (title || 'Document') + '"></iframe>';
+          if (modalBody) modalBody.innerHTML = buildViewerHtml(src, kind, title, webUrl);
           window.openDocModal(null, src, title);
         });
       }, { passive: false });
@@ -101,7 +186,19 @@
         ev.stopImmediatePropagation();
         var src = a.getAttribute('data-src') || a.getAttribute('href');
         var title = a.getAttribute('data-title') || a.textContent.trim() || 'Document';
+        var kind = fileKindFromSrc(src);
         if (!src) return;
+
+        if (/^https?:\/\//i.test(src)) {
+          if (modalBody) {
+            modalBody.innerHTML = canEmbedExternal(src)
+              ? externalViewerHtml(src, title)
+              : externalFallbackHtml(src, title);
+          }
+          window.openDocModal(null, src, title);
+          return;
+        }
+
         // open directly in iframe (no fetch) as fallback for anchors (static URLs)
         // To enforce 100% modal viewing for anchors you can instead fetch & blob like buttons
         fetch(src, { credentials: 'same-origin' }).then(function (res) {
@@ -109,11 +206,11 @@
           return res.blob();
         }).then(function (blob) {
           var blobUrl = URL.createObjectURL(blob);
-          if (modalBody) modalBody.innerHTML = '<iframe src="' + blobUrl + '" style="width:100%;height:100%;border:0;" aria-label="' + (title || 'Document') + '"></iframe>';
+          if (modalBody) modalBody.innerHTML = buildViewerHtml(blobUrl, kind, title, null);
           modal._currentBlob = blobUrl;
           window.openDocModal(null, blobUrl, title);
         }).catch(function () {
-          if (modalBody) modalBody.innerHTML = '<iframe src="' + src + '" style="width:100%;height:100%;border:0;" aria-label="' + (title || 'Document') + '"></iframe>';
+          if (modalBody) modalBody.innerHTML = buildViewerHtml(src, kind, title, null);
           window.openDocModal(null, src, title);
         });
       }, { passive: false });
@@ -154,6 +251,22 @@
     var main = document.querySelector('.main-column');
     var skillsColumn = document.querySelector('.skills-column');
     if (!main || !skillsColumn) return;
+
+    // Mobile/tablet: use normal document flow to avoid overlap artifacts.
+    if (window.matchMedia && window.matchMedia('(max-width: 980px)').matches) {
+      skillsColumn.style.position = 'static';
+      skillsColumn.style.paddingTop = '';
+      skillsColumn.style.minHeight = '0';
+      Array.from(skillsColumn.querySelectorAll('.skill-block')).forEach(function (sb) {
+        sb.style.display = '';
+        sb.style.position = 'static';
+        sb.style.top = '';
+        sb.style.left = '';
+        sb.style.width = '100%';
+        sb.style.margin = '0 0 14px 0';
+      });
+      return;
+    }
 
     // ensure skills column can host absolutely positioned blocks
     skillsColumn.style.position = 'relative';

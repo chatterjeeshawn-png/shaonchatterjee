@@ -209,19 +209,15 @@
                <div class="resources-panel" hidden>
                  <ul class="resources-list">
                   <li>
-                    <button type="button" class="resource-btn" data-src="/static/images/ExampleKickoffDeck.pdf" data-title="Example Kickoff Deck" aria-label="Open Example Kickoff Deck in modal">Sample Kickoff Deck (slides)</button>
-                    <span class="muted">— stakeholder alignment</span>
-                  </li>
-                  <li>
-                    <button type="button" class="resource-btn" data-src="/static/images/JIRADash.png" data-title="PMO JIRA Dashboard" aria-label="Open PMO JIRA Dashboard in modal">PMO JIRA Dashboard (image)</button>
+                    <button type="button" class="resource-btn" data-src="/static/images/JIRADash.pdf" data-title="PMO JIRA Dashboard" aria-label="Open PMO JIRA Dashboard in modal">PMO JIRA Dashboard (pdf)</button>
                     <span class="muted">— monitoring & controlling</span>
                   </li>
                   <li>
-                    <button type="button" class="resource-btn" data-src="/static/images/TeamTimeline.png" data-title="Project Schedule Timeline" aria-label="Open Governance Status Deck in modal">Timeline graphic (image)</button>
+                    <button type="button" class="resource-btn" data-src="/static/images/TeamTimeline.pdf" data-title="Project Schedule Timeline" aria-label="Open Governance Status Deck in modal">Timeline graphic (pdf)</button>
                     <span class="muted">— schedule forecasting</span>
                   </li>
                    <li>
-                    <button type="button" class="resource-btn" data-src="/static/images/DCNews.pdf" data-title="GSAR in the news" aria-label="Open Governance Status Deck in modal">GSAR news article (pdf)</button>
+                    <button type="button" class="resource-btn" data-src="/static/images/DCNews.pdf" data-web-url="https://wjla.com/news/local/snap-benefits-washington-dc-legislation-council-members-increase-begin-raise-department-of-human-services-retroactive-payments-added-benefits" data-title="GSAR in the news" aria-label="Open GSAR news article in modal">GSAR news article (pdf)</button>
                     <span class="muted">— risk management</span>
                     </li>
                     <li>
@@ -1016,4 +1012,3 @@
 
 <!-- Load consolidated JS (resume.js) instead of inline scripts -->
 <script src="/static/resume.js"></script>
-

@@ -10,7 +10,7 @@
             After years of leading products, programs, and vendor teams, I wanted a place to remain close to the technology itself—to experiment, build, and document what I learn.
           </p>
           <div class="hero-cta">
-            <a href="/resume" class="btn btn-primary">View My Work</a>
+            <a href="/resume/" class="btn btn-primary">View My Work</a>
             <a href="#about-content" class="btn btn-secondary">Learn More</a>
           </div>
         </div>        
@@ -84,7 +84,7 @@
       </p>
       <p>
         If you're hiring for cloud or AI roles, building healthcare-focused products, or want to collaborate on technical content — 
-        <a href="/contact" class="text-link">let's talk</a>. I'm always excited to connect with people doing meaningful work.
+        <a href="/contact/" class="text-link">let's talk</a>. I'm always excited to connect with people doing meaningful work.
       </p>
 
       <div class="about-footer">

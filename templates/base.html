@@ -4,8 +4,8 @@
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>{{ title }}</title>
-  <link rel="stylesheet" href="/static/styles.css?v=8"/>
-  <link rel="stylesheet" href="/static/resume.css?v=3"/>
+  <link rel="stylesheet" href="/static/styles.css?v={{ build_version }}"/>
+  <link rel="stylesheet" href="/static/resume.css?v={{ build_version }}"/>
 </head>
 <body>
   <header class="site-header" role="banner">
@@ -29,6 +29,6 @@
   {{ content }}
 
   <!-- global app JS (loaded on all pages) -->
-  <script src="/static/resume.js?v=1" defer></script>
+  <script src="/static/resume.js?v={{ build_version }}" defer></script>
 </body>
 </html>
